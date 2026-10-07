@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Переключатель кнопок</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Контейнер для кнопок внизу экрана -->
+    <div class="button-container">
+        <button class="custom-btn active" onclick="switchActive(this)">Кнопка 1</button>
+        <button class="custom-btn" onclick="switchActive(this)">Кнопка 2</button>
+    </div>
+
+    <script>
+        function switchActive(clickedButton) {
+            // Находим все кнопки с классом custom-btn
+            const buttons = document.querySelectorAll('.custom-btn');
+            
+            // Удаляем класс active у всех кнопок
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            // Добавляем класс active только той, на которую нажали
+            clickedButton.classList.add('active');
+        }
+    </script>
+</body>
+</html>
