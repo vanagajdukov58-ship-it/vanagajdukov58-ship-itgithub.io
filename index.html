@@ -2,45 +2,54 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Морковная грядка</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Grow A Garden</title>
   <style>
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
       user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent; /* Убирает синее выделение при тапе на смартфонах */
+      outline: none !important;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden; /* Полный запрет прокрутки */
+      position: fixed; /* Зафиксировать экран */
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      touch-action: manipulation; /* Запрет двойного зума */
     }
 
     body {
-      background-color: #ffffff;
-      font-family: Arial, sans-serif;
-      min-height: 100vh;
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: space-between;
-      padding: 40px 20px;
+      align-items: center;
+      padding: 40px 20px 30px 20px;
     }
 
     .game-container {
       width: 100%;
       max-width: 360px;
-      height: 100vh;
-      max-height: 700px;
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* Верхний сетка 2x2 для посадки */
+    /* Верхняя сетка 2x2 */
     .plots-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 25px;
+      gap: 20px;
       width: 100%;
-      margin-top: 60px;
+      margin-top: 30px;
     }
 
     .plot-slot {
@@ -52,15 +61,9 @@
       justify-content: center;
       cursor: pointer;
       position: relative;
-      transition: background-color 0.2s, border-color 0.2s;
     }
 
-    .plot-slot.active-target {
-      border-color: #3b82f6;
-      background-color: #f0f9ff;
-    }
-
-    /* Таймер роста */
+    /* Текст таймера */
     .timer-text {
       font-size: 3rem;
       font-weight: 500;
@@ -88,35 +91,27 @@
       justify-content: center;
       cursor: pointer;
       padding: 6px;
-      transition: transform 0.1s, background-color 0.2s;
+      transition: transform 0.1s ease;
     }
 
-    .seed-slot:hover {
+    /* Эффект нажатия на семя без синего цвета */
+    .seed-slot.selected {
+      transform: scale(0.92);
       background-color: #f5f5f5;
     }
 
-    .seed-slot.selected {
-      background-color: #e0f2fe;
-      border-width: 2px;
-      border-color: #0284c7;
-    }
-
-    svg {
-      width: 80%;
-      height: 80%;
-      display: block;
-    }
-
-    .plot-slot svg {
-      width: 85%;
-      height: 85%;
+    img {
+      max-width: 85%;
+      max-height: 85%;
+      object-fit: contain;
+      pointer-events: none; /* Запрещает перетаскивать картинки */
     }
   </style>
 </head>
 <body>
 
   <div class="game-container">
-    <!-- 4 слота для грядок сверху -->
+    <!-- 4 верхних слота -->
     <div class="plots-grid">
       <div class="plot-slot" data-index="0"></div>
       <div class="plot-slot" data-index="1"></div>
@@ -124,62 +119,16 @@
       <div class="plot-slot" data-index="3"></div>
     </div>
 
-    <!-- 4 слота с семенами снизу -->
+    <!-- 4 нижних слота с семенами -->
     <div class="inventory-bar">
-      <div class="seed-slot" data-seed="0">
-        <!-- SVG Иконка блока семени -->
-        <svg viewBox="0 0 100 100">
-          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
-          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
-          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
-        </svg>
-      </div>
-      <div class="seed-slot" data-seed="1">
-        <svg viewBox="0 0 100 100">
-          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
-          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
-          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
-        </svg>
-      </div>
-      <div class="seed-slot" data-seed="2">
-        <svg viewBox="0 0 100 100">
-          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
-          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
-          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
-        </svg>
-      </div>
-      <div class="seed-slot" data-seed="3">
-        <svg viewBox="0 0 100 100">
-          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
-          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
-          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
-        </svg>
-      </div>
+      <div class="seed-slot"><img src="seed.png" alt="семя"></div>
+      <div class="seed-slot"><img src="seed.png" alt="семя"></div>
+      <div class="seed-slot"><img src="seed.png" alt="семя"></div>
+      <div class="seed-slot"><img src="seed.png" alt="семя"></div>
     </div>
   </div>
 
   <script>
-    // Шаблон 3D моркови (SVG)
-    const carrotSVG = `
-      <svg viewBox="0 0 100 120">
-        <!-- Ботва (Листья) -->
-        <rect x="25" y="5" width="20" height="45" fill="#4ea64a" rx="2"/>
-        <rect x="23" y="10" width="4" height="40" fill="#388e3c"/>
-        <rect x="52" y="18" width="22" height="38" fill="#4ea64a" rx="2"/>
-        <rect x="50" y="22" width="4" height="34" fill="#388e3c"/>
-        <rect x="62" y="22" width="16" height="32" fill="#4ea64a" rx="2"/>
-        
-        <!-- Тело моркови -->
-        <polygon points="30,48 70,48 70,80 30,80" fill="#e67e22"/>
-        <polygon points="70,48 80,43 80,75 70,80" fill="#d35400"/>
-        
-        <!-- Нижняя часть моркови -->
-        <polygon points="38,80 62,80 62,105 38,105" fill="#e67e22"/>
-        <polygon points="62,80 70,75 70,100 62,105" fill="#d35400"/>
-      </svg>
-    `;
-
-    // Состояние игры
     let selectedSeed = false;
     const plotsState = [
       { status: 'empty', timer: null, count: 3 },
@@ -191,46 +140,35 @@
     const seedSlots = document.querySelectorAll('.seed-slot');
     const plotSlots = document.querySelectorAll('.plot-slot');
 
-    // Нажатие на слот с семенами снизу
+    // Клик по слоту с семенами
     seedSlots.forEach(slot => {
       slot.addEventListener('click', () => {
         selectedSeed = true;
         seedSlots.forEach(s => s.classList.remove('selected'));
         slot.classList.add('selected');
-        
-        plotSlots.forEach((p, idx) => {
-          if (plotsState[idx].status === 'empty') {
-            p.classList.add('active-target');
-          }
-        });
       });
     });
 
-    // Нажатие на верхний слот (грядку)
+    // Клик по верхним слотам
     plotSlots.forEach((slot, index) => {
       slot.addEventListener('click', () => {
         const state = plotsState[index];
 
-        // 1. Посадка семени
         if (state.status === 'empty' && selectedSeed) {
           startGrowing(index);
           resetSeedSelection();
-        } 
-        // 2. Сбор выращенной моркови
-        else if (state.status === 'ready') {
+        } else if (state.status === 'ready') {
           harvestCarrot(index);
         }
       });
     });
 
-    // Сброс выделения семени
     function resetSeedSelection() {
       selectedSeed = false;
       seedSlots.forEach(s => s.classList.remove('selected'));
-      plotSlots.forEach(p => p.classList.remove('active-target'));
     }
 
-    // Запуск таймера роста (3 секунды)
+    // Запуск отсчета (3с -> 2с -> 1с -> Морковь)
     function startGrowing(index) {
       const state = plotsState[index];
       const slotElement = plotSlots[index];
@@ -247,12 +185,12 @@
         } else {
           clearInterval(state.timer);
           state.status = 'ready';
-          slotElement.innerHTML = carrotSVG;
+          slotElement.innerHTML = `<img src="carrot.png" alt="морковь">`;
         }
       }, 1000);
     }
 
-    // Сбор моркови (освобождение слота)
+    // Сбор моркови
     function harvestCarrot(index) {
       const state = plotsState[index];
       state.status = 'empty';
