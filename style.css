@@ -1,41 +1,99 @@
+* {
+    box-sizing: border-box;
+}
+
 /* Базовые настройки страницы */
 body {
     margin: 0;
     padding: 0;
-    background-color: #ffffff; /* Белый фон как на макете */
+    background-color: #ffffff;
     font-family: Arial, sans-serif;
-    height: 100vh;
-    position: relative;
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
 }
 
-/* Контейнер, который прижимает кнопки к самому низу */
+/* Главный контейнер страницы (ограничен шириной для мобильных устройств) */
+.main-container {
+    width: 100%;
+    max-width: 420px;
+    padding: 15px;
+    padding-bottom: 90px; /* Отступ снизу, чтобы нижние кнопки не перекрывали контент */
+}
+
+/* Управление отображением вкладок */
+.tab-page {
+    display: none;
+}
+
+.tab-page.active {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Рамки для секций Колоды и Коллекции */
+.section-box {
+    border: 2px solid #000000;
+    border-radius: 8px;
+    padding: 12px;
+    background-color: #ffffff;
+}
+
+/* Заголовки "Колода" и "Коллекция" */
+.section-title {
+    margin: 0 0 10px 0;
+    font-size: 18px;
+    text-align: center;
+    text-transform: uppercase;
+    font-weight: bold;
+    letter-spacing: 0.5px;
+}
+
+/* Сетка для карт (по 4 штуки в ряд) */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+}
+
+/* Пустой слот для карты */
+.card-slot {
+    width: 100%;
+    aspect-ratio: 3 / 4; /* Пропорции карточки как в Clash Royale */
+    border: 2px solid #000000;
+    border-radius: 6px;
+    background-color: #ffffff;
+    transition: background-color 0.2s;
+}
+
+/* Контейнер, который прижимает кнопки к низу экрана */
 .button-container {
-    position: absolute;
-    bottom: 20px; /* Отступ от нижнего края экрана */
+    position: fixed; /* Фиксированное положение внизу экрана */
+    bottom: 20px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 15px; /* Расстояние между кнопками */
-    width: 90%; /* Ширина контейнера */
-    max-width: 400px; /* Максимальная ширина для мобильных устройств */
+    gap: 15px;
+    width: 90%;
+    max-width: 400px;
     justify-content: space-between;
+    z-index: 100;
 }
 
-/* Стандартный вид черных кнопок */
+/* Стандартный вид черных кнопок без текста */
 .custom-btn {
     flex: 1;
     height: 50px;
-    background-color: #000000; /* Черный фон */
-    color: #ffffff; /* Белый текст (можно убрать, если текст не нужен) */
-    border: 2px solid transparent; /* Прозрачная обводка по умолчанию, чтобы кнопки не прыгали при активации */
-    border-radius: 4px; /* Легкое закругление углов */
-    font-size: 16px;
+    background-color: #000000;
+    border: 2px solid transparent;
+    border-radius: 4px;
     cursor: pointer;
     outline: none;
-    transition: border-color 0.2s ease; /* Плавное появление обводки */
+    transition: border-color 0.2s ease;
 }
 
 /* Стиль для активной кнопки (зеленая обводка) */
 .custom-btn.active {
-    border-color: #2ea44f; /* Зеленый цвет обводки (как кнопка Commit на GitHub) */
+    border-color: #2ea44f;
 }
