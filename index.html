@@ -3,27 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Переключатель кнопок</title>
+    <title>Колода и Коллекция</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+    <!-- Главный контейнер для содержимого экранов -->
+    <div class="main-container">
+        
+        <!-- Страница 1: Колода и Коллекция (открыта по умолчанию) -->
+        <div id="deck-page" class="tab-page active">
+            
+            <!-- Блок Колоды -->
+            <div class="section-box">
+                <h2 class="section-title">Колода</h2>
+                <div class="card-grid deck-grid">
+                    <!-- 8 слотов для активной колоды -->
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                </div>
+            </div>
+
+            <!-- Блок Коллекции -->
+            <div class="section-box">
+                <h2 class="section-title">Коллекция</h2>
+                <div class="card-grid collection-grid">
+                    <!-- Пустые слоты коллекции -->
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                    <div class="card-slot"></div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Страница 2: Пустой экран (активна при нажатии на правую кнопку) -->
+        <div id="empty-page" class="tab-page">
+            <!-- Пока здесь пусто -->
+        </div>
+
+    </div>
+
     <!-- Контейнер для кнопок внизу экрана -->
     <div class="button-container">
-        <button class="custom-btn active" onclick="switchActive(this)">Кнопка 1</button>
-        <button class="custom-btn" onclick="switchActive(this)">Кнопка 2</button>
+        <button class="custom-btn active" onclick="switchTab(this, 'deck-page')"></button>
+        <button class="custom-btn" onclick="switchTab(this, 'empty-page')"></button>
     </div>
 
     <script>
-        function switchActive(clickedButton) {
-            // Находим все кнопки с классом custom-btn
+        function switchTab(clickedButton, targetPageId) {
+            // Переключаем активный стиль для кнопок
             const buttons = document.querySelectorAll('.custom-btn');
-            
-            // Удаляем класс active у всех кнопок
             buttons.forEach(btn => btn.classList.remove('active'));
-            
-            // Добавляем класс active только той, на которую нажали
             clickedButton.classList.add('active');
+
+            // Переключаем видимость страниц
+            const pages = document.querySelectorAll('.tab-page');
+            pages.forEach(page => page.classList.remove('active'));
+            document.getElementById(targetPageId).classList.add('active');
         }
     </script>
 </body>
