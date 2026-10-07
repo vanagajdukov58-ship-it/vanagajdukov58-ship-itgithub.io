@@ -1,148 +1,234 @@
-<!DOCTYPE html><html lang="ru">
+<!DOCTYPE html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0, user-scalable=no">
+
+    <meta
+        name="viewport"
+        content="width=device-width,
+        initial-scale=1.0,
+        maximum-scale=1.0,
+        user-scalable=no"
+    >
+
     <title>Brainrot Royale</title>
+
     <link rel="stylesheet" href="style.css">
-</head><body><div class="main-container"><!-- =========================
-     СТРАНИЦА КОЛОДЫ
-========================== -->
-<div id="deck-page" class="tab-page active">
+</head>
 
-    <div class="section-box">
-        <h2 class="section-title">КОЛОДА</h2>
+<body>
 
-        <div class="card-grid" id="deck-grid">
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-        </div>
-    </div>
+<div class="main-container">
 
-    <div class="section-box collection-section">
-        <h2 class="section-title">КОЛЛЕКЦИЯ</h2>
+    <!-- =========================
+         КОЛОДА И КОЛЛЕКЦИЯ
+    ========================== -->
 
-        <div class="card-grid" id="collection-grid">
+    <div id="deck-page" class="tab-page active">
 
-            <!-- Единственный начальный бреинрот -->
-            <div class="card-slot">
-                <div class="card yellow-card"
-                     data-card-id="noobiny">
-                    <span>Noobiny<br>Pizzani</span>
-                </div>
+        <div class="section-box deck-box">
+
+            <h2 class="section-title">
+                КОЛОДА
+            </h2>
+
+            <div id="deck-grid" class="card-grid">
+
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+
             </div>
 
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
-            <div class="card-slot"></div>
+        </div>
+
+
+        <div class="section-box collection-box">
+
+            <h2 class="section-title">
+                КОЛЛЕКЦИЯ
+            </h2>
+
+            <div id="collection-grid" class="card-grid">
+
+                <!-- НАЧАЛЬНЫЙ БРЕЙНРОТ -->
+                <div class="card-slot">
+
+                    <div
+                        class="card yellow-card"
+                        data-card-id="noobiny">
+                    </div>
+
+                </div>
+
+
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+                <div class="card-slot"></div>
+
+            </div>
 
         </div>
-    </div>
-
-</div>
-
-
-<!-- =========================
-     СТРАНИЦА ИГРЫ
-========================== -->
-<div id="game-page" class="tab-page">
-
-    <!-- МЕНЮ PLAY -->
-    <div id="play-menu">
-
-        <button id="play-button" class="play-btn">
-            PLAY
-        </button>
 
     </div>
+
 
 
     <!-- =========================
-         АРЕНА
+         ИГРОВАЯ СТРАНИЦА
     ========================== -->
-    <div id="battle-arena">
 
-        <!-- ВРАЖЕСКАЯ СТОРОНА -->
-        <div class="enemy-area">
+    <div id="game-page" class="tab-page">
 
-            <div class="tower-row enemy-towers">
 
-                <div id="tower-left"
-                     class="tower side-tower">
-                    <div class="tower-name">TOWER</div>
-                    <div class="tower-hp">100/100</div>
-                </div>
+        <!-- МЕНЮ PLAY -->
 
-                <div id="tower-main"
-                     class="tower main-tower">
-                    <div class="tower-name">MAIN</div>
-                    <div class="tower-hp">500/500</div>
-                </div>
+        <div id="play-menu">
 
-                <div id="tower-right"
-                     class="tower side-tower">
-                    <div class="tower-name">TOWER</div>
-                    <div class="tower-hp">100/100</div>
-                </div>
-
-            </div>
+            <button
+                id="play-button"
+                class="play-btn">
+                PLAY
+            </button>
 
         </div>
 
-
-        <!-- ИГРОВОЕ ПОЛЕ -->
-        <div id="field-area">
-
-            <div class="field-line"></div>
-
-        </div>
-
-
-        <!-- БАШНИ ИГРОКА -->
-        <div class="player-area">
-
-            <div class="tower-row player-towers">
-
-                <div class="tower side-tower player-tower">
-                    <div class="tower-name">YOU</div>
-                </div>
-
-                <div class="tower side-tower player-tower">
-                    <div class="tower-name">YOU</div>
-                </div>
-
-            </div>
-
-            <div class="tower player-main-tower">
-                <div class="tower-name">YOUR MAIN</div>
-            </div>
-
-        </div>
 
 
         <!-- =========================
-             КАРТЫ
+             АРЕНА
         ========================== -->
-        <div id="hand-container">
 
-            <div id="hand-slots"></div>
+        <div id="battle-arena">
 
-            <div class="hand-hint">
-                Зажми карту и перетащи её на поле
+
+            <!-- ВРАЖЕСКИЕ БАШНИ -->
+
+            <div class="enemy-area">
+
+                <div class="tower-row enemy-towers">
+
+                    <div
+                        id="tower-left"
+                        class="tower side-tower">
+
+                        <div class="tower-name">
+                            TOWER
+                        </div>
+
+                        <div class="tower-hp">
+                            100/100
+                        </div>
+
+                    </div>
+
+
+
+                    <div
+                        id="tower-main"
+                        class="tower main-tower">
+
+                        <div class="tower-name">
+                            MAIN
+                        </div>
+
+                        <div class="tower-hp">
+                            500/500
+                        </div>
+
+                    </div>
+
+
+
+                    <div
+                        id="tower-right"
+                        class="tower side-tower">
+
+                        <div class="tower-name">
+                            TOWER
+                        </div>
+
+                        <div class="tower-hp">
+                            100/100
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- ПОЛЕ -->
+
+            <div id="field-area">
+
+                <div class="field-line"></div>
+
+            </div>
+
+
+
+            <!-- БАШНИ ИГРОКА -->
+
+            <div class="player-area">
+
+                <div class="tower-row player-towers">
+
+                    <div class="tower side-tower player-tower">
+                        <div class="tower-name">
+                            YOU
+                        </div>
+                    </div>
+
+                    <div class="tower side-tower player-tower">
+                        <div class="tower-name">
+                            YOU
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="tower player-main-tower">
+
+                    <div class="tower-name">
+                        YOUR MAIN
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- КАРТЫ -->
+
+            <div id="hand-container">
+
+                <div id="hand-slots"></div>
+
+                <div class="hand-hint">
+                    ЗАЖМИ И ПЕРЕТАЩИ НА ПОЛЕ
+                </div>
+
             </div>
 
         </div>
@@ -151,25 +237,45 @@
 
 </div>
 
-</div><!-- =========================
-     НИЖНЕЕ МЕНЮ
-========================== --><div class="button-container"><button id="deck-tab-button"
+
+
+<!-- =========================
+     НИЖНИЕ КНОПКИ
+========================== -->
+
+<div class="button-container">
+
+    <button
+        id="deck-tab-button"
         class="custom-btn active">
-    КОЛОДА
-</button>
 
-<button id="game-tab-button"
+        КОЛОДА
+
+    </button>
+
+
+    <button
+        id="game-tab-button"
         class="custom-btn">
-    ИГРАТЬ
-</button>
 
-</div><script>
+        ИГРАТЬ
 
-/* =========================================================
+    </button>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+     ВАЖНО: ВЕСЬ JAVASCRIPT НАХОДИТСЯ ВНУТРИ SCRIPT
+===================================================== -->
+
+<script>
+
+/* =====================================================
    НАСТРОЙКИ
-========================================================= */
-
-const CARD_ID = "noobiny";
+===================================================== */
 
 const UNIT_SIZE = 42;
 
@@ -184,9 +290,9 @@ const MAIN_TOWER_HP = 500;
 const ATTACK_INTERVAL = 1000;
 
 
-/* =========================================================
-   СОСТОЯНИЕ ИГРЫ
-========================================================= */
+/* =====================================================
+   СОСТОЯНИЕ
+===================================================== */
 
 let towers = {};
 
@@ -199,9 +305,9 @@ let gameLoop = null;
 let nextUnitId = 1;
 
 
-/* =========================================================
-   DOM
-========================================================= */
+/* =====================================================
+   ELEMENTS
+===================================================== */
 
 const deckPage =
     document.getElementById("deck-page");
@@ -237,52 +343,27 @@ const gameTabButton =
     document.getElementById("game-tab-button");
 
 
-/* =========================================================
-   ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
-========================================================= */
-
-function getDeckCards() {
-
-    return deckGrid.querySelectorAll(".card");
-
-}
-
-
-function getCollectionCards() {
-
-    return collectionGrid.querySelectorAll(".card");
-
-}
-
-
-/* =========================================================
-   ПЕРЕТАСКИВАНИЕ КАРТ В КОЛОДЕ
-   Работает мышью + телефоном
-========================================================= */
+/* =====================================================
+   ПЕРЕТАСКИВАНИЕ КАРТЫ В КОЛОДУ
+===================================================== */
 
 let draggedCard = null;
 
 let dragGhost = null;
 
+let cardDropTarget = null;
+
 let dragOffsetX = 0;
 
 let dragOffsetY = 0;
 
-let cardDropTarget = null;
-
-
-/* Начало перетаскивания */
 
 function startCardDrag(card, event) {
 
-    if (event.button !== undefined &&
-        event.button !== 0) {
-        return;
-    }
-
     draggedCard = card;
 
-    const rect = card.getBoundingClientRect();
+    const rect =
+        card.getBoundingClientRect();
 
     dragOffsetX =
         event.clientX - rect.left;
@@ -290,11 +371,18 @@ function startCardDrag(card, event) {
     dragOffsetY =
         event.clientY - rect.top;
 
+
     card.classList.add("dragging");
 
-    dragGhost = card.cloneNode(true);
 
-    dragGhost.classList.add("drag-ghost");
+    dragGhost =
+        card.cloneNode(true);
+
+
+    dragGhost.classList.add(
+        "drag-ghost"
+    );
+
 
     dragGhost.style.width =
         rect.width + "px";
@@ -302,39 +390,57 @@ function startCardDrag(card, event) {
     dragGhost.style.height =
         rect.height + "px";
 
-    document.body.appendChild(dragGhost);
+
+    document.body.appendChild(
+        dragGhost
+    );
+
 
     moveCardGhost(event);
+
 
     document.addEventListener(
         "pointermove",
         moveCardGhost
     );
 
+
     document.addEventListener(
         "pointerup",
         finishCardDrag,
         { once: true }
     );
+
 }
 
-
-/* Движение карты */
 
 function moveCardGhost(event) {
 
     if (!dragGhost) return;
 
+
     dragGhost.style.left =
-        (event.clientX - dragOffsetX) + "px";
+        (
+            event.clientX -
+            dragOffsetX
+        ) + "px";
+
 
     dragGhost.style.top =
-        (event.clientY - dragOffsetY) + "px";
+        (
+            event.clientY -
+            dragOffsetY
+        ) + "px";
 
 
-    document.querySelectorAll(".card-slot")
+    document
+        .querySelectorAll(".card-slot")
         .forEach(slot => {
-            slot.classList.remove("drop-target");
+
+            slot.classList.remove(
+                "drop-target"
+            );
+
         });
 
 
@@ -344,12 +450,16 @@ function moveCardGhost(event) {
             event.clientY
         );
 
+
     const slot =
         element?.closest(".card-slot");
 
+
     if (slot) {
 
-        slot.classList.add("drop-target");
+        slot.classList.add(
+            "drop-target"
+        );
 
         cardDropTarget = slot;
 
@@ -358,10 +468,9 @@ function moveCardGhost(event) {
         cardDropTarget = null;
 
     }
+
 }
 
-
-/* Завершение перетаскивания */
 
 function finishCardDrag() {
 
@@ -370,25 +479,33 @@ function finishCardDrag() {
         moveCardGhost
     );
 
-    document.querySelectorAll(".card-slot")
+
+    document
+        .querySelectorAll(".card-slot")
         .forEach(slot => {
-            slot.classList.remove("drop-target");
+
+            slot.classList.remove(
+                "drop-target"
+            );
+
         });
 
 
-    if (draggedCard && cardDropTarget) {
+    if (
+        draggedCard &&
+        cardDropTarget
+    ) {
 
         const targetCard =
-            cardDropTarget.querySelector(".card");
+            cardDropTarget.querySelector(
+                ".card"
+            );
 
 
-        /*
-         Если место занято другой картой,
-         меняем карты местами.
-        */
-
-        if (targetCard &&
-            targetCard !== draggedCard) {
+        if (
+            targetCard &&
+            targetCard !== draggedCard
+        ) {
 
             const oldParent =
                 draggedCard.parentElement;
@@ -396,9 +513,15 @@ function finishCardDrag() {
             const targetParent =
                 targetCard.parentElement;
 
-            oldParent.appendChild(targetCard);
 
-            targetParent.appendChild(draggedCard);
+            oldParent.appendChild(
+                targetCard
+            );
+
+
+            targetParent.appendChild(
+                draggedCard
+            );
 
         } else {
 
@@ -412,7 +535,11 @@ function finishCardDrag() {
 
 
     if (draggedCard) {
-        draggedCard.classList.remove("dragging");
+
+        draggedCard.classList.remove(
+            "dragging"
+        );
+
     }
 
 
@@ -428,12 +555,13 @@ function finishCardDrag() {
     draggedCard = null;
 
     cardDropTarget = null;
+
 }
 
 
-/* =========================================================
+/* =====================================================
    ИНИЦИАЛИЗАЦИЯ КАРТ
-========================================================= */
+===================================================== */
 
 function initCard(card) {
 
@@ -457,21 +585,14 @@ function initCard(card) {
 }
 
 
-function initAllCards() {
-
-    document
-        .querySelectorAll(".card")
-        .forEach(initCard);
-
-}
+document
+    .querySelectorAll(".card")
+    .forEach(initCard);
 
 
-initAllCards();
-
-
-/* =========================================================
-   ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
-========================================================= */
+/* =====================================================
+   ВКЛАДКИ
+===================================================== */
 
 function openDeckPage() {
 
@@ -489,6 +610,681 @@ function openDeckPage() {
 function openGamePage() {
 
     deckPage.classList.remove("active");
+
+    gamePage.classList.add("active");
+
+    deckTabButton.classList.remove("active");
+
+    gameTabButton.classList.add("active");
+
+}
+
+
+deckTabButton.addEventListener(
+    "click",
+    openDeckPage
+);
+
+
+gameTabButton.addEventListener(
+    "click",
+    openGamePage
+);
+
+
+/* =====================================================
+   PLAY
+===================================================== */
+
+playButton.addEventListener(
+    "click",
+    startBattle
+);
+
+
+function startBattle() {
+
+    const cards =
+        Array.from(
+            deckGrid.querySelectorAll(
+                ".card"
+            )
+        );
+
+
+    if (cards.length === 0) {
+
+        alert(
+            "Сначала положи бреинрот в колоду!"
+        );
+
+        return;
+
+    }
+
+
+    playMenu.style.display =
+        "none";
+
+
+    battleArena.style.display =
+        "flex";
+
+
+    gameRunning = true;
+
+
+    resetTowers();
+
+    clearUnits();
+
+    createHand();
+
+
+    if (gameLoop) {
+
+        clearInterval(
+            gameLoop
+        );
+
+    }
+
+
+    lastFrame =
+        performance.now();
+
+
+    gameLoop =
+        setInterval(
+            updateGame,
+            30
+        );
+
+}
+
+
+/* =====================================================
+   РУКА
+===================================================== */
+
+function createHand() {
+
+    handSlots.innerHTML = "";
+
+
+    const cards =
+        Array.from(
+            deckGrid.querySelectorAll(
+                ".card"
+            )
+        );
+
+
+    cards.forEach(card => {
+
+        const clone =
+            card.cloneNode(true);
+
+
+        clone.classList.add(
+            "hand-card"
+        );
+
+
+        clone.addEventListener(
+            "pointerdown",
+            function(event) {
+
+                event.preventDefault();
+
+                startUnitDrag(
+                    clone,
+                    event
+                );
+
+            }
+        );
+
+
+        handSlots.appendChild(
+            clone
+        );
+
+    });
+
+}
+
+
+/* =====================================================
+   ПЕРЕТАСКИВАНИЕ БРЕЙНРОТА
+===================================================== */
+
+let unitDrag = null;
+
+let unitGhost = null;
+
+let unitDragValid = false;
+
+
+function startUnitDrag(card, event) {
+
+    if (!gameRunning) return;
+
+
+    unitDrag = {
+        card: card
+    };
+
+
+    unitGhost =
+        card.cloneNode(true);
+
+
+    unitGhost.classList.add(
+        "unit-drag-ghost"
+    );
+
+
+    document.body.appendChild(
+        unitGhost
+    );
+
+
+    moveUnitDrag(event);
+
+
+    document.addEventListener(
+        "pointermove",
+        moveUnitDrag
+    );
+
+
+    document.addEventListener(
+        "pointerup",
+        finishUnitDrag,
+        { once: true }
+    );
+
+}
+
+
+function moveUnitDrag(event) {
+
+    if (!unitGhost) return;
+
+
+    unitGhost.style.left =
+        (
+            event.clientX -
+            26
+        ) + "px";
+
+
+    unitGhost.style.top =
+        (
+            event.clientY -
+            26
+        ) + "px";
+
+
+    const rect =
+        field.getBoundingClientRect();
+
+
+    unitDragValid =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom;
+
+
+    if (unitDragValid) {
+
+        unitGhost.classList.add(
+            "valid"
+        );
+
+    } else {
+
+        unitGhost.classList.remove(
+            "valid"
+        );
+
+    }
+
+}
+
+
+function finishUnitDrag(event) {
+
+    document.removeEventListener(
+        "pointermove",
+        moveUnitDrag
+    );
+
+
+    if (unitDragValid) {
+
+        const rect =
+            field.getBoundingClientRect();
+
+
+        const x =
+            event.clientX -
+            rect.left -
+            UNIT_SIZE / 2;
+
+
+        const y =
+            event.clientY -
+            rect.top -
+            UNIT_SIZE / 2;
+
+
+        spawnUnit(
+            x,
+            y
+        );
+
+
+        if (
+            unitDrag &&
+            unitDrag.card
+        ) {
+
+            unitDrag.card.remove();
+
+        }
+
+    }
+
+
+    if (unitGhost) {
+
+        unitGhost.remove();
+
+    }
+
+
+    unitGhost = null;
+
+    unitDrag = null;
+
+    unitDragValid = false;
+
+}
+
+
+/* =====================================================
+   БАШНИ
+===================================================== */
+
+function resetTowers() {
+
+    towers = {
+
+        left: {
+
+            el:
+                document.getElementById(
+                    "tower-left"
+                ),
+
+            hp:
+                SIDE_TOWER_HP,
+
+            maxHp:
+                SIDE_TOWER_HP,
+
+            alive:
+                true
+
+        },
+
+
+        right: {
+
+            el:
+                document.getElementById(
+                    "tower-right"
+                ),
+
+            hp:
+                SIDE_TOWER_HP,
+
+            maxHp:
+                SIDE_TOWER_HP,
+
+            alive:
+                true
+
+        },
+
+
+        main: {
+
+            el:
+                document.getElementById(
+                    "tower-main"
+                ),
+
+            hp:
+                MAIN_TOWER_HP,
+
+            maxHp:
+                MAIN_TOWER_HP,
+
+            alive:
+                true
+
+        }
+
+    };
+
+
+    updateTower("left");
+
+    updateTower("right");
+
+    updateTower("main");
+
+}
+
+
+function updateTower(type) {
+
+    const tower =
+        towers[type];
+
+
+    if (!tower) return;
+
+
+    const hp =
+        tower.el.querySelector(
+            ".tower-hp"
+        );
+
+
+    if (tower.hp <= 0) {
+
+        tower.hp = 0;
+
+        tower.alive = false;
+
+        tower.el.classList.add(
+            "destroyed"
+        );
+
+        hp.textContent =
+            "DESTROYED";
+
+    } else {
+
+        tower.alive = true;
+
+        tower.el.classList.remove(
+            "destroyed"
+        );
+
+        hp.textContent =
+            Math.ceil(tower.hp) +
+            "/" +
+            tower.maxHp;
+
+    }
+
+}
+
+
+/* =====================================================
+   СОЗДАНИЕ ЮНИТА
+===================================================== */
+
+function spawnUnit(x, y) {
+
+    const element =
+        document.createElement(
+            "div"
+        );
+
+
+    element.className =
+        "unit yellow-unit";
+
+
+    field.appendChild(
+        element
+    );
+
+
+    const unit = {
+
+        id:
+            nextUnitId++,
+
+        el:
+            element,
+
+        x:
+            x,
+
+        y:
+            y,
+
+        speed:
+            UNIT_SPEED,
+
+        dps:
+            UNIT_DPS,
+
+        target:
+            null,
+
+        lastAttack:
+            0
+
+    };
+
+
+    units.push(
+        unit
+    );
+
+
+    updateUnitPosition(
+        unit
+    );
+
+}
+
+
+/* =====================================================
+   ВЫБОР ЦЕЛИ
+===================================================== */
+
+function chooseTarget(unit) {
+
+    if (
+        unit.target &&
+        towers[unit.target] &&
+        towers[unit.target].alive
+    ) {
+
+        return unit.target;
+
+    }
+
+
+    if (
+        !towers.left.alive &&
+        !towers.right.alive
+    ) {
+
+        if (towers.main.alive) {
+
+            return "main";
+
+        }
+
+        return null;
+
+    }
+
+
+    if (
+        towers.left.alive &&
+        towers.right.alive
+    ) {
+
+        if (
+            unit.x <
+            field.clientWidth / 2
+        ) {
+
+            return "left";
+
+        }
+
+        return "right";
+
+    }
+
+
+    if (towers.left.alive) {
+
+        return "left";
+
+    }
+
+
+    if (towers.right.alive) {
+
+        return "right";
+
+    }
+
+
+    if (towers.main.alive) {
+
+        return "main";
+
+    }
+
+
+    return null;
+
+}
+
+
+/* =====================================================
+   ПОЗИЦИЯ БАШНИ
+===================================================== */
+
+function getTowerPosition(type) {
+
+    const tower =
+        towers[type];
+
+
+    const towerRect =
+        tower.el.getBoundingClientRect();
+
+
+    const fieldRect =
+        field.getBoundingClientRect();
+
+
+    return {
+
+        x:
+            towerRect.left +
+            towerRect.width / 2 -
+            fieldRect.left -
+            UNIT_SIZE / 2,
+
+        y:
+            towerRect.top +
+            towerRect.height / 2 -
+            fieldRect.top -
+            UNIT_SIZE / 2
+
+    };
+
+}
+
+
+/* =====================================================
+   ИГРОВОЙ ЦИКЛ
+===================================================== */
+
+let lastFrame =
+    performance.now();
+
+
+function updateGame() {
+
+    if (!gameRunning) return;
+
+
+    const now =
+        performance.now();
+
+
+    const delta =
+        Math.min(
+            (now - lastFrame) / 1000,
+            0.05
+        );
+
+
+    lastFrame = now;
+
+
+    units.forEach(unit => {
+
+        if (!unit.el.isConnected) {
+            return;
+        }
+
+
+        const target =
+            chooseTarget(unit);
+
+
+        unit.target =
+            target;
+
+
+        if (!target) return;
+
+
+        const targetPosition =
+            getTowerPosition(
+                target
+            );
+
+
+        const dx =
+            targetPosition.x -
+            unit.x;
+
+
+        const dy =
+            targetPosition.y -
+            unit.y;
+
+
+        const distance =
+            Math.hypot(
+                dx,
+                dy
+            );
+
+
+        if (distance < 32) {
+
+            attackTowerive");
 
     gamePage.classList.add("active");
 
