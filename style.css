@@ -1,0 +1,41 @@
+/* Базовые настройки страницы */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #ffffff; /* Белый фон как на макете */
+    font-family: Arial, sans-serif;
+    height: 100vh;
+    position: relative;
+}
+
+/* Контейнер, который прижимает кнопки к самому низу */
+.button-container {
+    position: absolute;
+    bottom: 20px; /* Отступ от нижнего края экрана */
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 15px; /* Расстояние между кнопками */
+    width: 90%; /* Ширина контейнера */
+    max-width: 400px; /* Максимальная ширина для мобильных устройств */
+    justify-content: space-between;
+}
+
+/* Стандартный вид черных кнопок */
+.custom-btn {
+    flex: 1;
+    height: 50px;
+    background-color: #000000; /* Черный фон */
+    color: #ffffff; /* Белый текст (можно убрать, если текст не нужен) */
+    border: 2px solid transparent; /* Прозрачная обводка по умолчанию, чтобы кнопки не прыгали при активации */
+    border-radius: 4px; /* Легкое закругление углов */
+    font-size: 16px;
+    cursor: pointer;
+    outline: none;
+    transition: border-color 0.2s ease; /* Плавное появление обводки */
+}
+
+/* Стиль для активной кнопки (зеленая обводка) */
+.custom-btn.active {
+    border-color: #2ea44f; /* Зеленый цвет обводки (как кнопка Commit на GitHub) */
+}
