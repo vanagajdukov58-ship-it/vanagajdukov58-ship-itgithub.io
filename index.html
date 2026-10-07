@@ -1,2192 +1,264 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Морковная грядка</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
 
-    <meta
-        name="viewport"
-        content="width=device-width,
-        initial-scale=1.0,
-        maximum-scale=1.0,
-        user-scalable=no"
-    >
+    body {
+      background-color: #ffffff;
+      font-family: Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 40px 20px;
+    }
 
-    <title>Brainrot Royale</title>
+    .game-container {
+      width: 100%;
+      max-width: 360px;
+      height: 100vh;
+      max-height: 700px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-    <link rel="stylesheet" href="style.css">
+    /* Верхний сетка 2x2 для посадки */
+    .plots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 25px;
+      width: 100%;
+      margin-top: 60px;
+    }
+
+    .plot-slot {
+      aspect-ratio: 1 / 1;
+      border: 2px solid #000000;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      position: relative;
+      transition: background-color 0.2s, border-color 0.2s;
+    }
+
+    .plot-slot.active-target {
+      border-color: #3b82f6;
+      background-color: #f0f9ff;
+    }
+
+    /* Таймер роста */
+    .timer-text {
+      font-size: 3rem;
+      font-weight: 500;
+      color: #000000;
+    }
+
+    /* Нижняя панель с семенами */
+    .inventory-bar {
+      border: 1.5px solid #000000;
+      padding: 4px;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 4px;
+      width: 100%;
+      background-color: #ffffff;
+      margin-bottom: 20px;
+    }
+
+    .seed-slot {
+      aspect-ratio: 1 / 1;
+      border: 1px solid #000000;
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      padding: 6px;
+      transition: transform 0.1s, background-color 0.2s;
+    }
+
+    .seed-slot:hover {
+      background-color: #f5f5f5;
+    }
+
+    .seed-slot.selected {
+      background-color: #e0f2fe;
+      border-width: 2px;
+      border-color: #0284c7;
+    }
+
+    svg {
+      width: 80%;
+      height: 80%;
+      display: block;
+    }
+
+    .plot-slot svg {
+      width: 85%;
+      height: 85%;
+    }
+  </style>
 </head>
-
 <body>
 
-<div class="main-container">
-
-    <!-- =========================
-         КОЛОДА И КОЛЛЕКЦИЯ
-    ========================== -->
-
-    <div id="deck-page" class="tab-page active">
-
-        <div class="section-box deck-box">
-
-            <h2 class="section-title">
-                КОЛОДА
-            </h2>
-
-            <div id="deck-grid" class="card-grid">
-
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-
-            </div>
-
-        </div>
-
-
-        <div class="section-box collection-box">
-
-            <h2 class="section-title">
-                КОЛЛЕКЦИЯ
-            </h2>
-
-            <div id="collection-grid" class="card-grid">
-
-                <!-- НАЧАЛЬНЫЙ БРЕЙНРОТ -->
-                <div class="card-slot">
-
-                    <div
-                        class="card yellow-card"
-                        data-card-id="noobiny">
-                    </div>
-
-                </div>
-
-
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-                <div class="card-slot"></div>
-
-            </div>
-
-        </div>
-
+  <div class="game-container">
+    <!-- 4 слота для грядок сверху -->
+    <div class="plots-grid">
+      <div class="plot-slot" data-index="0"></div>
+      <div class="plot-slot" data-index="1"></div>
+      <div class="plot-slot" data-index="2"></div>
+      <div class="plot-slot" data-index="3"></div>
     </div>
 
-
-
-    <!-- =========================
-         ИГРОВАЯ СТРАНИЦА
-    ========================== -->
-
-    <div id="game-page" class="tab-page">
-
-
-        <!-- МЕНЮ PLAY -->
-
-        <div id="play-menu">
-
-            <button
-                id="play-button"
-                class="play-btn">
-                PLAY
-            </button>
-
-        </div>
-
-
-
-        <!-- =========================
-             АРЕНА
-        ========================== -->
-
-        <div id="battle-arena">
-
-
-            <!-- ВРАЖЕСКИЕ БАШНИ -->
-
-            <div class="enemy-area">
-
-                <div class="tower-row enemy-towers">
-
-                    <div
-                        id="tower-left"
-                        class="tower side-tower">
-
-                        <div class="tower-name">
-                            TOWER
-                        </div>
-
-                        <div class="tower-hp">
-                            100/100
-                        </div>
-
-                    </div>
-
-
-
-                    <div
-                        id="tower-main"
-                        class="tower main-tower">
-
-                        <div class="tower-name">
-                            MAIN
-                        </div>
-
-                        <div class="tower-hp">
-                            500/500
-                        </div>
-
-                    </div>
-
-
-
-                    <div
-                        id="tower-right"
-                        class="tower side-tower">
-
-                        <div class="tower-name">
-                            TOWER
-                        </div>
-
-                        <div class="tower-hp">
-                            100/100
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- ПОЛЕ -->
-
-            <div id="field-area">
-
-                <div class="field-line"></div>
-
-            </div>
-
-
-
-            <!-- БАШНИ ИГРОКА -->
-
-            <div class="player-area">
-
-                <div class="tower-row player-towers">
-
-                    <div class="tower side-tower player-tower">
-                        <div class="tower-name">
-                            YOU
-                        </div>
-                    </div>
-
-                    <div class="tower side-tower player-tower">
-                        <div class="tower-name">
-                            YOU
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <div class="tower player-main-tower">
-
-                    <div class="tower-name">
-                        YOUR MAIN
-                    </div>
-
-                </div>
-
-            </div>
-
-
-
-            <!-- КАРТЫ -->
-
-            <div id="hand-container">
-
-                <div id="hand-slots"></div>
-
-                <div class="hand-hint">
-                    ЗАЖМИ И ПЕРЕТАЩИ НА ПОЛЕ
-                </div>
-
-            </div>
-
-        </div>
-
+    <!-- 4 слота с семенами снизу -->
+    <div class="inventory-bar">
+      <div class="seed-slot" data-seed="0">
+        <!-- SVG Иконка блока семени -->
+        <svg viewBox="0 0 100 100">
+          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
+          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
+          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
+        </svg>
+      </div>
+      <div class="seed-slot" data-seed="1">
+        <svg viewBox="0 0 100 100">
+          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
+          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
+          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
+        </svg>
+      </div>
+      <div class="seed-slot" data-seed="2">
+        <svg viewBox="0 0 100 100">
+          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
+          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
+          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
+        </svg>
+      </div>
+      <div class="seed-slot" data-seed="3">
+        <svg viewBox="0 0 100 100">
+          <polygon points="50,15 85,32 50,50 15,32" fill="#d97724"/>
+          <polygon points="15,32 50,50 50,85 15,67" fill="#b45309"/>
+          <polygon points="50,50 85,32 85,67 50,85" fill="#883707"/>
+        </svg>
+      </div>
     </div>
-
-</div>
-
-
-
-<!-- =========================
-     НИЖНИЕ КНОПКИ
-========================== -->
-
-<div class="button-container">
-
-    <button
-        id="deck-tab-button"
-        class="custom-btn active">
-
-        КОЛОДА
-
-    </button>
-
-
-    <button
-        id="game-tab-button"
-        class="custom-btn">
-
-        ИГРАТЬ
-
-    </button>
-
-</div>
-
-
-
-<!-- =====================================================
-     JAVASCRIPT
-     ВАЖНО: ВЕСЬ JAVASCRIPT НАХОДИТСЯ ВНУТРИ SCRIPT
-===================================================== -->
-
-<script>
-
-/* =====================================================
-   НАСТРОЙКИ
-===================================================== */
-
-const UNIT_SIZE = 42;
-
-const UNIT_SPEED = 55;
-
-const UNIT_DPS = 10;
-
-const SIDE_TOWER_HP = 100;
-
-const MAIN_TOWER_HP = 500;
-
-const ATTACK_INTERVAL = 1000;
-
-
-/* =====================================================
-   СОСТОЯНИЕ
-===================================================== */
-
-let towers = {};
-
-let units = [];
-
-let gameRunning = false;
-
-let gameLoop = null;
-
-let nextUnitId = 1;
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const deckPage =
-    document.getElementById("deck-page");
-
-const gamePage =
-    document.getElementById("game-page");
-
-const deckGrid =
-    document.getElementById("deck-grid");
-
-const collectionGrid =
-    document.getElementById("collection-grid");
-
-const playMenu =
-    document.getElementById("play-menu");
-
-const battleArena =
-    document.getElementById("battle-arena");
-
-const field =
-    document.getElementById("field-area");
-
-const handSlots =
-    document.getElementById("hand-slots");
-
-const playButton =
-    document.getElementById("play-button");
-
-const deckTabButton =
-    document.getElementById("deck-tab-button");
-
-const gameTabButton =
-    document.getElementById("game-tab-button");
-
-
-/* =====================================================
-   ПЕРЕТАСКИВАНИЕ КАРТЫ В КОЛОДУ
-===================================================== */
-
-let draggedCard = null;
-
-let dragGhost = null;
-
-let cardDropTarget = null;
-
-let dragOffsetX = 0;
-
-let dragOffsetY = 0;
-
-
-function startCardDrag(card, event) {
-
-    draggedCard = card;
-
-    const rect =
-        card.getBoundingClientRect();
-
-    dragOffsetX =
-        event.clientX - rect.left;
-
-    dragOffsetY =
-        event.clientY - rect.top;
-
-
-    card.classList.add("dragging");
-
-
-    dragGhost =
-        card.cloneNode(true);
-
-
-    dragGhost.classList.add(
-        "drag-ghost"
-    );
-
-
-    dragGhost.style.width =
-        rect.width + "px";
-
-    dragGhost.style.height =
-        rect.height + "px";
-
-
-    document.body.appendChild(
-        dragGhost
-    );
-
-
-    moveCardGhost(event);
-
-
-    document.addEventListener(
-        "pointermove",
-        moveCardGhost
-    );
-
-
-    document.addEventListener(
-        "pointerup",
-        finishCardDrag,
-        { once: true }
-    );
-
-}
-
-
-function moveCardGhost(event) {
-
-    if (!dragGhost) return;
-
-
-    dragGhost.style.left =
-        (
-            event.clientX -
-            dragOffsetX
-        ) + "px";
-
-
-    dragGhost.style.top =
-        (
-            event.clientY -
-            dragOffsetY
-        ) + "px";
-
-
-    document
-        .querySelectorAll(".card-slot")
-        .forEach(slot => {
-
-            slot.classList.remove(
-                "drop-target"
-            );
-
+  </div>
+
+  <script>
+    // Шаблон 3D моркови (SVG)
+    const carrotSVG = `
+      <svg viewBox="0 0 100 120">
+        <!-- Ботва (Листья) -->
+        <rect x="25" y="5" width="20" height="45" fill="#4ea64a" rx="2"/>
+        <rect x="23" y="10" width="4" height="40" fill="#388e3c"/>
+        <rect x="52" y="18" width="22" height="38" fill="#4ea64a" rx="2"/>
+        <rect x="50" y="22" width="4" height="34" fill="#388e3c"/>
+        <rect x="62" y="22" width="16" height="32" fill="#4ea64a" rx="2"/>
+        
+        <!-- Тело моркови -->
+        <polygon points="30,48 70,48 70,80 30,80" fill="#e67e22"/>
+        <polygon points="70,48 80,43 80,75 70,80" fill="#d35400"/>
+        
+        <!-- Нижняя часть моркови -->
+        <polygon points="38,80 62,80 62,105 38,105" fill="#e67e22"/>
+        <polygon points="62,80 70,75 70,100 62,105" fill="#d35400"/>
+      </svg>
+    `;
+
+    // Состояние игры
+    let selectedSeed = false;
+    const plotsState = [
+      { status: 'empty', timer: null, count: 3 },
+      { status: 'empty', timer: null, count: 3 },
+      { status: 'empty', timer: null, count: 3 },
+      { status: 'empty', timer: null, count: 3 }
+    ];
+
+    const seedSlots = document.querySelectorAll('.seed-slot');
+    const plotSlots = document.querySelectorAll('.plot-slot');
+
+    // Нажатие на слот с семенами снизу
+    seedSlots.forEach(slot => {
+      slot.addEventListener('click', () => {
+        selectedSeed = true;
+        seedSlots.forEach(s => s.classList.remove('selected'));
+        slot.classList.add('selected');
+        
+        plotSlots.forEach((p, idx) => {
+          if (plotsState[idx].status === 'empty') {
+            p.classList.add('active-target');
+          }
         });
-
-
-    const element =
-        document.elementFromPoint(
-            event.clientX,
-            event.clientY
-        );
-
-
-    const slot =
-        element?.closest(".card-slot");
-
-
-    if (slot) {
-
-        slot.classList.add(
-            "drop-target"
-        );
-
-        cardDropTarget = slot;
-
-    } else {
-
-        cardDropTarget = null;
-
-    }
-
-}
-
-
-function finishCardDrag() {
-
-    document.removeEventListener(
-        "pointermove",
-        moveCardGhost
-    );
-
-
-    document
-        .querySelectorAll(".card-slot")
-        .forEach(slot => {
-
-            slot.classList.remove(
-                "drop-target"
-            );
-
-        });
-
-
-    if (
-        draggedCard &&
-        cardDropTarget
-    ) {
-
-        const targetCard =
-            cardDropTarget.querySelector(
-                ".card"
-            );
-
-
-        if (
-            targetCard &&
-            targetCard !== draggedCard
-        ) {
-
-            const oldParent =
-                draggedCard.parentElement;
-
-            const targetParent =
-                targetCard.parentElement;
-
-
-            oldParent.appendChild(
-                targetCard
-            );
-
-
-            targetParent.appendChild(
-                draggedCard
-            );
-
-        } else {
-
-            cardDropTarget.appendChild(
-                draggedCard
-            );
-
-        }
-
-    }
-
-
-    if (draggedCard) {
-
-        draggedCard.classList.remove(
-            "dragging"
-        );
-
-    }
-
-
-    if (dragGhost) {
-
-        dragGhost.remove();
-
-        dragGhost = null;
-
-    }
-
-
-    draggedCard = null;
-
-    cardDropTarget = null;
-
-}
-
-
-/* =====================================================
-   ИНИЦИАЛИЗАЦИЯ КАРТ
-===================================================== */
-
-function initCard(card) {
-
-    if (!card) return;
-
-
-    card.addEventListener(
-        "pointerdown",
-        function(event) {
-
-            event.preventDefault();
-
-            startCardDrag(
-                card,
-                event
-            );
-
-        }
-    );
-
-}
-
-
-document
-    .querySelectorAll(".card")
-    .forEach(initCard);
-
-
-/* =====================================================
-   ВКЛАДКИ
-===================================================== */
-
-function openDeckPage() {
-
-    deckPage.classList.add("active");
-
-    gamePage.classList.remove("active");
-
-    deckTabButton.classList.add("active");
-
-    gameTabButton.classList.remove("active");
-
-}
-
-
-function openGamePage() {
-
-    deckPage.classList.remove("active");
-
-    gamePage.classList.add("active");
-
-    deckTabButton.classList.remove("active");
-
-    gameTabButton.classList.add("active");
-
-}
-
-
-deckTabButton.addEventListener(
-    "click",
-    openDeckPage
-);
-
-
-gameTabButton.addEventListener(
-    "click",
-    openGamePage
-);
-
-
-/* =====================================================
-   PLAY
-===================================================== */
-
-playButton.addEventListener(
-    "click",
-    startBattle
-);
-
-
-function startBattle() {
-
-    const cards =
-        Array.from(
-            deckGrid.querySelectorAll(
-                ".card"
-            )
-        );
-
-
-    if (cards.length === 0) {
-
-        alert(
-            "Сначала положи бреинрот в колоду!"
-        );
-
-        return;
-
-    }
-
-
-    playMenu.style.display =
-        "none";
-
-
-    battleArena.style.display =
-        "flex";
-
-
-    gameRunning = true;
-
-
-    resetTowers();
-
-    clearUnits();
-
-    createHand();
-
-
-    if (gameLoop) {
-
-        clearInterval(
-            gameLoop
-        );
-
-    }
-
-
-    lastFrame =
-        performance.now();
-
-
-    gameLoop =
-        setInterval(
-            updateGame,
-            30
-        );
-
-}
-
-
-/* =====================================================
-   РУКА
-===================================================== */
-
-function createHand() {
-
-    handSlots.innerHTML = "";
-
-
-    const cards =
-        Array.from(
-            deckGrid.querySelectorAll(
-                ".card"
-            )
-        );
-
-
-    cards.forEach(card => {
-
-        const clone =
-            card.cloneNode(true);
-
-
-        clone.classList.add(
-            "hand-card"
-        );
-
-
-        clone.addEventListener(
-            "pointerdown",
-            function(event) {
-
-                event.preventDefault();
-
-                startUnitDrag(
-                    clone,
-                    event
-                );
-
-            }
-        );
-
-
-        handSlots.appendChild(
-            clone
-        );
-
+      });
     });
 
-}
+    // Нажатие на верхний слот (грядку)
+    plotSlots.forEach((slot, index) => {
+      slot.addEventListener('click', () => {
+        const state = plotsState[index];
 
-
-/* =====================================================
-   ПЕРЕТАСКИВАНИЕ БРЕЙНРОТА
-===================================================== */
-
-let unitDrag = null;
-
-let unitGhost = null;
-
-let unitDragValid = false;
-
-
-function startUnitDrag(card, event) {
-
-    if (!gameRunning) return;
-
-
-    unitDrag = {
-        card: card
-    };
-
-
-    unitGhost =
-        card.cloneNode(true);
-
-
-    unitGhost.classList.add(
-        "unit-drag-ghost"
-    );
-
-
-    document.body.appendChild(
-        unitGhost
-    );
-
-
-    moveUnitDrag(event);
-
-
-    document.addEventListener(
-        "pointermove",
-        moveUnitDrag
-    );
-
-
-    document.addEventListener(
-        "pointerup",
-        finishUnitDrag,
-        { once: true }
-    );
-
-}
-
-
-function moveUnitDrag(event) {
-
-    if (!unitGhost) return;
-
-
-    unitGhost.style.left =
-        (
-            event.clientX -
-            26
-        ) + "px";
-
-
-    unitGhost.style.top =
-        (
-            event.clientY -
-            26
-        ) + "px";
-
-
-    const rect =
-        field.getBoundingClientRect();
-
-
-    unitDragValid =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-
-
-    if (unitDragValid) {
-
-        unitGhost.classList.add(
-            "valid"
-        );
-
-    } else {
-
-        unitGhost.classList.remove(
-            "valid"
-        );
-
-    }
-
-}
-
-
-function finishUnitDrag(event) {
-
-    document.removeEventListener(
-        "pointermove",
-        moveUnitDrag
-    );
-
-
-    if (unitDragValid) {
-
-        const rect =
-            field.getBoundingClientRect();
-
-
-        const x =
-            event.clientX -
-            rect.left -
-            UNIT_SIZE / 2;
-
-
-        const y =
-            event.clientY -
-            rect.top -
-            UNIT_SIZE / 2;
-
-
-        spawnUnit(
-            x,
-            y
-        );
-
-
-        if (
-            unitDrag &&
-            unitDrag.card
-        ) {
-
-            unitDrag.card.remove();
-
+        // 1. Посадка семени
+        if (state.status === 'empty' && selectedSeed) {
+          startGrowing(index);
+          resetSeedSelection();
+        } 
+        // 2. Сбор выращенной моркови
+        else if (state.status === 'ready') {
+          harvestCarrot(index);
         }
-
-    }
-
-
-    if (unitGhost) {
-
-        unitGhost.remove();
-
-    }
-
-
-    unitGhost = null;
-
-    unitDrag = null;
-
-    unitDragValid = false;
-
-}
-
-
-/* =====================================================
-   БАШНИ
-===================================================== */
-
-function resetTowers() {
-
-    towers = {
-
-        left: {
-
-            el:
-                document.getElementById(
-                    "tower-left"
-                ),
-
-            hp:
-                SIDE_TOWER_HP,
-
-            maxHp:
-                SIDE_TOWER_HP,
-
-            alive:
-                true
-
-        },
-
-
-        right: {
-
-            el:
-                document.getElementById(
-                    "tower-right"
-                ),
-
-            hp:
-                SIDE_TOWER_HP,
-
-            maxHp:
-                SIDE_TOWER_HP,
-
-            alive:
-                true
-
-        },
-
-
-        main: {
-
-            el:
-                document.getElementById(
-                    "tower-main"
-                ),
-
-            hp:
-                MAIN_TOWER_HP,
-
-            maxHp:
-                MAIN_TOWER_HP,
-
-            alive:
-                true
-
-        }
-
-    };
-
-
-    updateTower("left");
-
-    updateTower("right");
-
-    updateTower("main");
-
-}
-
-
-function updateTower(type) {
-
-    const tower =
-        towers[type];
-
-
-    if (!tower) return;
-
-
-    const hp =
-        tower.el.querySelector(
-            ".tower-hp"
-        );
-
-
-    if (tower.hp <= 0) {
-
-        tower.hp = 0;
-
-        tower.alive = false;
-
-        tower.el.classList.add(
-            "destroyed"
-        );
-
-        hp.textContent =
-            "DESTROYED";
-
-    } else {
-
-        tower.alive = true;
-
-        tower.el.classList.remove(
-            "destroyed"
-        );
-
-        hp.textContent =
-            Math.ceil(tower.hp) +
-            "/" +
-            tower.maxHp;
-
-    }
-
-}
-
-
-/* =====================================================
-   СОЗДАНИЕ ЮНИТА
-===================================================== */
-
-function spawnUnit(x, y) {
-
-    const element =
-        document.createElement(
-            "div"
-        );
-
-
-    element.className =
-        "unit yellow-unit";
-
-
-    field.appendChild(
-        element
-    );
-
-
-    const unit = {
-
-        id:
-            nextUnitId++,
-
-        el:
-            element,
-
-        x:
-            x,
-
-        y:
-            y,
-
-        speed:
-            UNIT_SPEED,
-
-        dps:
-            UNIT_DPS,
-
-        target:
-            null,
-
-        lastAttack:
-            0
-
-    };
-
-
-    units.push(
-        unit
-    );
-
-
-    updateUnitPosition(
-        unit
-    );
-
-}
-
-
-/* =====================================================
-   ВЫБОР ЦЕЛИ
-===================================================== */
-
-function chooseTarget(unit) {
-
-    if (
-        unit.target &&
-        towers[unit.target] &&
-        towers[unit.target].alive
-    ) {
-
-        return unit.target;
-
-    }
-
-
-    if (
-        !towers.left.alive &&
-        !towers.right.alive
-    ) {
-
-        if (towers.main.alive) {
-
-            return "main";
-
-        }
-
-        return null;
-
-    }
-
-
-    if (
-        towers.left.alive &&
-        towers.right.alive
-    ) {
-
-        if (
-            unit.x <
-            field.clientWidth / 2
-        ) {
-
-            return "left";
-
-        }
-
-        return "right";
-
-    }
-
-
-    if (towers.left.alive) {
-
-        return "left";
-
-    }
-
-
-    if (towers.right.alive) {
-
-        return "right";
-
-    }
-
-
-    if (towers.main.alive) {
-
-        return "main";
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =====================================================
-   ПОЗИЦИЯ БАШНИ
-===================================================== */
-
-function getTowerPosition(type) {
-
-    const tower =
-        towers[type];
-
-
-    const towerRect =
-        tower.el.getBoundingClientRect();
-
-
-    const fieldRect =
-        field.getBoundingClientRect();
-
-
-    return {
-
-        x:
-            towerRect.left +
-            towerRect.width / 2 -
-            fieldRect.left -
-            UNIT_SIZE / 2,
-
-        y:
-            towerRect.top +
-            towerRect.height / 2 -
-            fieldRect.top -
-            UNIT_SIZE / 2
-
-    };
-
-}
-
-
-/* =====================================================
-   ИГРОВОЙ ЦИКЛ
-===================================================== */
-
-let lastFrame =
-    performance.now();
-
-
-function updateGame() {
-
-    if (!gameRunning) return;
-
-
-    const now =
-        performance.now();
-
-
-    const delta =
-        Math.min(
-            (now - lastFrame) / 1000,
-            0.05
-        );
-
-
-    lastFrame = now;
-
-
-    units.forEach(unit => {
-
-        if (!unit.el.isConnected) {
-            return;
-        }
-
-
-        const target =
-            chooseTarget(unit);
-
-
-        unit.target =
-            target;
-
-
-        if (!target) return;
-
-
-        const targetPosition =
-            getTowerPosition(
-                target
-            );
-
-
-        const dx =
-            targetPosition.x -
-            unit.x;
-
-
-        const dy =
-            targetPosition.y -
-            unit.y;
-
-
-        const distance =
-            Math.hypot(
-                dx,
-                dy
-            );
-
-
-        if (distance < 32) {
-
-            attackTowerive");
-
-    gamePage.classList.add("active");
-
-    deckTabButton.classList.remove("active");
-
-    gameTabButton.classList.add("active");
-
-}
-
-
-deckTabButton.addEventListener(
-    "click",
-    openDeckPage
-);
-
-
-gameTabButton.addEventListener(
-    "click",
-    openGamePage
-);
-
-
-/* =========================================================
-   PLAY
-========================================================= */
-
-playButton.addEventListener(
-    "click",
-    startBattle
-);
-
-
-function startBattle() {
-
-    const cards =
-        Array.from(getDeckCards());
-
-
-    if (cards.length === 0) {
-
-        alert(
-            "Сначала перетащи бреинрот из коллекции в колоду!"
-        );
-
-        return;
-
-    }
-
-
-    playMenu.style.display = "none";
-
-    battleArena.style.display = "flex";
-
-    gameRunning = true;
-
-
-    resetTowers();
-
-    createHand();
-
-    clearUnits();
-
-
-    if (gameLoop) {
-
-        clearInterval(gameLoop);
-
-    }
-
-
-    gameLoop =
-        setInterval(
-            updateGame,
-            30
-        );
-
-}
-
-
-/* =========================================================
-   СОЗДАНИЕ РУКИ
-========================================================= */
-
-function createHand() {
-
-    handSlots.innerHTML = "";
-
-
-    const cards =
-        Array.from(getDeckCards());
-
-
-    cards.forEach(card => {
-
-        const clone =
-            card.cloneNode(true);
-
-
-        clone.classList.remove(
-            "dragging"
-        );
-
-
-        clone.classList.add(
-            "hand-card"
-        );
-
-
-        /*
-         Для руки карта сама становится
-         источником перетаскивания.
-        */
-
-        clone.addEventListener(
-            "pointerdown",
-            function(event) {
-
-                event.preventDefault();
-
-                startUnitDrag(
-                    clone,
-                    event
-                );
-
-            }
-        );
-
-
-        handSlots.appendChild(
-            clone
-        );
-
+      });
     });
 
-}
-
-
-/* =========================================================
-   ПЕРЕТАСКИВАНИЕ БРЕЙНРОТА НА ПОЛЕ
-========================================================= */
-
-let unitDrag = null;
-
-let unitGhost = null;
-
-let unitDragValid = false;
-
-
-function startUnitDrag(card, event) {
-
-    if (!gameRunning) return;
-
-
-    unitDrag = {
-
-        card: card,
-
-        startX: event.clientX,
-
-        startY: event.clientY
-
-    };
-
-
-    unitGhost =
-        card.cloneNode(true);
-
-
-    unitGhost.classList.add(
-        "unit-drag-ghost"
-    );
-
-
-    document.body.appendChild(
-        unitGhost
-    );
-
-
-    moveUnitDrag(event);
-
-
-    document.addEventListener(
-        "pointermove",
-        moveUnitDrag
-    );
-
-
-    document.addEventListener(
-        "pointerup",
-        finishUnitDrag,
-        { once: true }
-    );
-
-}
-
-
-function moveUnitDrag(event) {
-
-    if (!unitGhost) return;
-
-
-    unitGhost.style.left =
-        (event.clientX -
-         unitGhost.offsetWidth / 2)
-        + "px";
-
-
-    unitGhost.style.top =
-        (event.clientY -
-         unitGhost.offsetHeight / 2)
-        + "px";
-
-
-    const rect =
-        field.getBoundingClientRect();
-
-
-    const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom;
-
-
-    unitDragValid = inside;
-
-
-    if (inside) {
-
-        unitGhost.classList.add(
-            "valid"
-        );
-
-    } else {
-
-        unitGhost.classList.remove(
-            "valid"
-        );
-
+    // Сброс выделения семени
+    function resetSeedSelection() {
+      selectedSeed = false;
+      seedSlots.forEach(s => s.classList.remove('selected'));
+      plotSlots.forEach(p => p.classList.remove('active-target'));
     }
 
-}
-
-
-function finishUnitDrag(event) {
-
-    document.removeEventListener(
-        "pointermove",
-        moveUnitDrag
-    );
-
-
-    if (unitDragValid) {
-
-        const rect =
-            field.getBoundingClientRect();
-
-
-        const x =
-            event.clientX -
-            rect.left -
-            UNIT_SIZE / 2;
-
-
-        const y =
-            event.clientY -
-            rect.top -
-            UNIT_SIZE / 2;
-
-
-        spawnUnit(
-            x,
-            y
-        );
-
-
-        /*
-         Убираем использованную карту
-         из руки.
-        */
-
-        if (unitDrag?.card) {
-
-            unitDrag.card.remove();
-
-        }
-
-    }
-
-
-    if (unitGhost) {
-
-        unitGhost.remove();
-
-    }
-
-
-    unitGhost = null;
-
-    unitDrag = null;
-
-    unitDragValid = false;
-
-}
-
-
-/* =========================================================
-   БАШНИ
-========================================================= */
-
-function resetTowers() {
-
-    towers = {
-
-        left: {
-
-            el:
-                document.getElementById(
-                    "tower-left"
-                ),
-
-            hp:
-                SIDE_TOWER_HP,
-
-            maxHp:
-                SIDE_TOWER_HP,
-
-            alive:
-                true
-
-        },
-
-        right: {
-
-            el:
-                document.getElementById(
-                    "tower-right"
-                ),
-
-            hp:
-                SIDE_TOWER_HP,
-
-            maxHp:
-                SIDE_TOWER_HP,
-
-            alive:
-                true
-
-        },
-
-        main: {
-
-            el:
-                document.getElementById(
-                    "tower-main"
-                ),
-
-            hp:
-                MAIN_TOWER_HP,
-
-            maxHp:
-                MAIN_TOWER_HP,
-
-            alive:
-                true
-
-        }
-
-    };
-
-
-    updateTower(
-        "left"
-    );
-
-    updateTower(
-        "right"
-    );
-
-    updateTower(
-        "main"
-    );
-
-}
-
-
-function updateTower(type) {
-
-    const tower =
-        towers[type];
-
-
-    if (!tower) return;
-
-
-    const hpElement =
-        tower.el.querySelector(
-            ".tower-hp"
-        );
-
-
-    if (tower.hp <= 0) {
-
-        tower.hp = 0;
-
-        tower.alive = false;
-
-        tower.el.classList.add(
-            "destroyed"
-        );
-
-        hpElement.textContent =
-            "DESTROYED";
-
-    } else {
-
-        tower.el.classList.remove(
-            "destroyed"
-        );
-
-        hpElement.textContent =
-            `${Math.ceil(tower.hp)}/${tower.maxHp}`;
-
-    }
-
-}
-
-
-/* =========================================================
-   СОЗДАНИЕ ЮНИТА
-========================================================= */
-
-function spawnUnit(x, y) {
-
-    const unitEl =
-        document.createElement("div");
-
-
-    unitEl.className =
-        "unit yellow-unit";
-
-
-    unitEl.innerHTML =
-        `<span>Noobiny</span>`;
-
-
-    field.appendChild(
-        unitEl
-    );
-
-
-    const unit = {
-
-        id:
-            nextUnitId++,
-
-        el:
-            unitEl,
-
-        x:
-            x,
-
-        y:
-            y,
-
-        speed:
-            UNIT_SPEED,
-
-        dps:
-            UNIT_DPS,
-
-        lastAttack:
-            0,
-
-        target:
-            null
-
-    };
-
-
-    units.push(unit);
-
-
-    updateUnitPosition(
-        unit
-    );
-
-}
-
-
-/* =========================================================
-   ПОИСК ЦЕЛИ
-========================================================= */
-
-function chooseTarget(unit) {
-
-    /*
-       Если юнит находится ближе
-       к левой стороне — идёт к левой башне.
-
-       Если ближе к правой —
-       идёт к правой.
-
-       Если обе уничтожены —
-       идёт к главному зданию.
-    */
-
-
-    if (
-        unit.target &&
-        towers[unit.target] &&
-        towers[unit.target].alive
-    ) {
-
-        return unit.target;
-
-    }
-
-
-    if (
-        !towers.left.alive &&
-        !towers.right.alive
-    ) {
-
-        if (towers.main.alive) {
-
-            return "main";
-
-        }
-
-        return null;
-
-    }
-
-
-    if (
-        towers.left.alive &&
-        towers.right.alive
-    ) {
-
-        const fieldWidth =
-            field.clientWidth;
-
-
-        if (
-            unit.x <
-            fieldWidth / 2
-        ) {
-
-            return "left";
-
+    // Запуск таймера роста (3 секунды)
+    function startGrowing(index) {
+      const state = plotsState[index];
+      const slotElement = plotSlots[index];
+      
+      state.status = 'growing';
+      state.count = 3;
+      
+      slotElement.innerHTML = `<span class="timer-text">${state.count}s</span>`;
+
+      state.timer = setInterval(() => {
+        state.count--;
+        if (state.count > 0) {
+          slotElement.innerHTML = `<span class="timer-text">${state.count}s</span>`;
         } else {
-
-            return "right";
-
+          clearInterval(state.timer);
+          state.status = 'ready';
+          slotElement.innerHTML = carrotSVG;
         }
-
+      }, 1000);
     }
 
-
-    if (towers.left.alive) {
-
-        return "left";
-
+    // Сбор моркови (освобождение слота)
+    function harvestCarrot(index) {
+      const state = plotsState[index];
+      state.status = 'empty';
+      state.count = 3;
+      plotSlots[index].innerHTML = '';
     }
-
-
-    if (towers.right.alive) {
-
-        return "right";
-
-    }
-
-
-    if (towers.main.alive) {
-
-        return "main";
-
-    }
-
-
-    return null;
-
-}
-
-
-/* =========================================================
-   ПОЗИЦИЯ БАШНИ
-========================================================= */
-
-function getTowerTargetPosition(
-    type
-) {
-
-    const tower =
-        towers[type];
-
-
-    const towerRect =
-        tower.el.getBoundingClientRect();
-
-
-    const fieldRect =
-        field.getBoundingClientRect();
-
-
-    return {
-
-        x:
-            towerRect.left +
-            towerRect.width / 2 -
-            fieldRect.left -
-            UNIT_SIZE / 2,
-
-        y:
-            towerRect.top +
-            towerRect.height / 2 -
-            fieldRect.top -
-            UNIT_SIZE / 2
-
-    };
-
-}
-
-
-/* =========================================================
-   UPDATE ИГРЫ
-========================================================= */
-
-let lastFrame =
-    performance.now();
-
-
-function updateGame() {
-
-    if (!gameRunning) return;
-
-
-    const now =
-        performance.now();
-
-
-    const delta =
-        Math.min(
-            (now - lastFrame) / 1000,
-            0.05
-        );
-
-
-    lastFrame = now;
-
-
-    units.forEach(unit => {
-
-        if (!unit.el.isConnected) {
-            return;
-        }
-
-
-        const target =
-            chooseTarget(unit);
-
-
-        unit.target =
-            target;
-
-
-        if (!target) {
-            return;
-        }
-
-
-        const targetPos =
-            getTowerTargetPosition(
-                target
-            );
-
-
-        const dx =
-            targetPos.x -
-            unit.x;
-
-
-        const dy =
-            targetPos.y -
-            unit.y;
-
-
-        const distance =
-            Math.hypot(
-                dx,
-                dy
-            );
-
-
-        /*
-           Расстояние, при котором
-           юнит начинает атаковать.
-        */
-
-        if (distance < 35) {
-
-            attackTower(
-                unit,
-                target,
-                now
-            );
-
-            return;
-
-        }
-
-
-        /*
-           Движение.
-        */
-
-        const move =
-            unit.speed *
-            delta;
-
-
-        unit.x +=
-            (dx / distance) *
-            Math.min(
-              el.style.visibility = 'visible';
-                    hpEl.innerText = t.hp + '/' + t.maxHp + ' HP';
-                }
-            };
-
-            updateTower('tower-left', 'hp-left', 'left');
-            updateTower('tower-main', 'hp-main', 'main');
-            updateTower('tower-right', 'hp-right', 'right');
-        }
-
-        function updateGame() {
-            const fieldRect = document.getElementById('field-area').getBoundingClientRect();
-
-            units.forEach(unit => {
-                let targetKey = null;
-                if (unit.x < fieldRect.width / 2 && towers.left.alive) {
-                    targetKey = 'left';
-                } else if (unit.x >= fieldRect.width / 2 && towers.right.alive) {
-                    targetKey = 'right';
-                } else if (towers.left.alive) {
-                    targetKey = 'left';
-                } else if (towers.right.alive) {
-                    targetKey = 'right';
-                } else if (towers.main.alive) {
-                    targetKey = 'main';
-                }
-
-                if (!targetKey) return;
-
-                const targetTowerEl = document.getElementById('tower-' + targetKey);
-                const tRect = targetTowerEl.getBoundingClientRect();
-
-                const targetX = (tRect.left + tRect.width / 2) - fieldRect.left - 20;
-                const targetY = tRect.bottom - fieldRect.top - 15;
-
-                const dx = targetX - unit.x;
-                const dy = targetY - unit.y;
-                const dist = Math.hypot(dx, dy);
-
-                if (dist < 10) {
-                    const now = Date.now();
-                    if (now - unit.lastAttack >= 1000) {
-                        towers[targetKey].hp -= unit.dps;
-                        updateHpDisplays();
-                        unit.lastAttack = now;
-
-                        if (!towers.main.alive) {
-                            endGame();
-                        }
-                    }
-                } else {
-                    unit.x += (dx / dist) * unit.speed;
-                    unit.y += (dy / dist) * unit.speed;
-                    unit.el.style.left = unit.x + 'px';
-                    unit.el.style.top = unit.y + 'px';
-                }
-            });
-        }
-
-        function endGame() {
-            clearInterval(gameLoopInterval);
-            alert('ПОБЕДА! Главная башня уничтожена!');
-            document.getElementById('battle-arena').classList.add('hidden-screen');
-            document.getElementById('play-menu').style.display = 'flex';
-        }
-    </script>
-</body>
-</html>
-                // Определяем цель: сперва ближайшая живая боковая башня, потом главное здание
-                let targetType = null;
-                if (unit.x < fieldRect.width / 2 && towers.left.alive) targetType = 'left';
-                else if (unit.x >= fieldRect.width / 2 && towers.right.alive) targetType = 'right';
-                else if (towers.left.alive) targetType = 'left';
-                else if (towers.right.alive) targetType = 'right';
-                else if (towers.main.alive) targetType = 'main';
-
-                if (!targetType) return;
-
-                const targetEl = towers[targetType].el;
-                const targetRect = targetEl.getBoundingClientRect();
-
-                const targetX = (targetRect.left + targetRect.width / 2) - fieldRect.left - 20;
-                const targetY = targetRect.bottom - fieldRect.top - 10;
-
-                const dx = targetX - unit.x;
-                const dy = targetY - unit.y;
-                const distance = Math.hypot(dx, dy);
-
-                if (distance < 12) {
-                    const now = Date.now();
-                    if (now - unit.lastAttackTime >= 1000) {
-                        towers[targetType].hp -= unit.dps;
-                        updateTowerHp(targetType);
-                        unit.lastAttackTime = now;
-
-                        if (!towers.main.alive) {
-                            endGame();
-                        }
-                    }
-                } else {
-                    unit.x += (dx / distance) * unit.speed;
-                    unit.y += (dy / distance) * unit.speed;
-                    unit.el.style.left = unit.x + 'px';
-                    unit.el.style.top = unit.y + 'px';
-                }
-            });
-        }
-
-        function endGame() {
-            clearInterval(gameLoopInterval);
-            alert('ПОБЕДА! Главная башня уничтожена!');
-            document.getElementById('battle-arena').style.display = 'none';
-            document.getElementById('play-menu').style.display = 'flex';
-        }
-    </script>
-</body>
-</html>
-(unit) {
-            // Если высадили слева — идет на левую башню, справа — на правую
-            if (unit.x < 150 && towers.left.alive) return 'left';
-            if (unit.x >= 150 && towers.right.alive) return 'right';
-            if (towers.left.alive) return 'left';
-            if (towers.right.alive) return 'right';
-            if (towers.main.alive) return 'main';
-            return null;
-        }
-
-        function updateGame() {
-            const fieldRect = document.getElementById('field-area').getBoundingClientRect();
-
-            units.forEach((unit, index) => {
-                const targetType = getTargetTower(unit);
-                if (!targetType) return;
-
-                const targetEl = towers[targetType].el;
-                const targetRect = targetEl.getBoundingClientRect();
-
-                // Целевая точка атаки (центр нижней границы башни относительно поля)
-                const targetX = (targetRect.left + targetRect.width / 2) - fieldRect.left - 20;
-                const targetY = targetRect.bottom - fieldRect.top - 20;
-
-                const dx = targetX - unit.x;
-                const dy = targetY - unit.y;
-                const distance = Math.hypot(dx, dy);
-
-                // Если подошел к башне — атакует
-                if (distance < 10) {
-                    const now = Date.now();
-                    if (now - unit.lastAttackTime >= 1000) { // 1 раз в секунду наносит 10 урона
-                        towers[targetType].hp -= unit.dps;
-                        updateTowerHp(targetType);
-                        unit.lastAttackTime = now;
-
-                        // Проверка победы (уничтожение главной башни)
-                        if (!towers.main.alive) {
-                            endGame(true);
-                        }
-                    }
-                } else {
-                    // Движение к башне
-                    unit.x += (dx / distance) * unit.speed;
-                    unit.y += (dy / distance) * unit.speed;
-                    unit.el.style.left = unit.x + 'px';
-                    unit.el.style.top = unit.y + 'px';
-                }
-            });
-        }
-
-        function endGame(isWin) {
-            clearInterval(gameLoopInterval);
-            if (isWin) {
-                alert('ПОБЕДА! Главное здание уничтожено!');
-            }
-            // Возврат в меню
-            document.getElementById('battle-arena').classList.add('hidden');
-            document.getElementById('play-menu').classList.remove('hidden');
-        }
-    </script>
+  </script>
 </body>
 </html>
